@@ -31,9 +31,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found!");
-        }
         return user;
     }
 
@@ -45,32 +42,31 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public void addNewUser(String role,User saveUser) {
-        Role role1 = roleRepository.findAll().stream()
-                .filter(r -> r.getRole()
-                        .equals(role)).findFirst()
-                .orElse(null);
-        saveUser.setRoles(List.of(role1));
-        userRepository.save(saveUser);
+            Role role1 = roleRepository.findByRole(role);
+            saveUser.getRoles().add(role1);
+            userRepository.save(saveUser);
     }
 
     @Override
     @Transactional
     public void updateUser(String role,User updateUser) {
-        Role role1 = roleRepository.findAll().stream()
-                .filter(r -> r.getRole()
-                        .equals(role)).findFirst()
-                .orElse(null);
+        Role role1 = roleRepository.findByRole(role);
         User user = userRepository.findById(updateUser.getId()).orElse(null);
         List<Role> roles = user.getRoles();
         roles.add(role1);
         user.setRoles(roles);
-        userRepository.save(updateUser);
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void deleteUser(long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            //Удаляем связанные роли пользователя из user_roles
+            user.getRoles().clear();
+            userRepository.deleteById(id);
+        }
     }
 
     @Override
