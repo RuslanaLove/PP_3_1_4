@@ -5,11 +5,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -19,9 +27,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String username;
+    private String firstname;
 
-    private String surname;
+    private String lastname;
 
     private int age;
 
@@ -37,9 +45,9 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String name, String surname, int age, String password) {
-        this.username = name;
-        this.surname = surname;
+    public User(String firstname, String lastname, int age, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.age = age;
         this.password = password;
     }
@@ -52,21 +60,20 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public int getAge() {
@@ -80,6 +87,11 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return firstname;
     }
 
     public void setPassword(String password) {
@@ -127,8 +139,8 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + username + '\'' +
-                ", surname='" + surname + '\'' +
+                ", name='" + firstname + '\'' +
+                ", surname='" + lastname + '\'' +
                 ", age=" + age +
                 ", password='" + password + '\'' +
                 '}';

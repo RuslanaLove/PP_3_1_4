@@ -29,9 +29,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        return user;
+    public UserDetails loadUserByUsername(String firstname) throws UsernameNotFoundException {
+        return userRepository.findByFirstname(firstname);
     }
 
     @Override
@@ -50,12 +49,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public void updateUser(String role,User updateUser) {
-        Role role1 = roleRepository.findByRole(role);
-        User user = userRepository.findById(updateUser.getId()).orElse(null);
-        List<Role> roles = user.getRoles();
-        roles.add(role1);
-        user.setRoles(roles);
-        userRepository.save(user);
+            User user = userRepository.findByFirstname(updateUser.getFirstname());
+            Role role1 = roleRepository.findByRole(role);
+            List<Role> roles = user.getRoles();
+            roles.add(role1);
+            user.setRoles(roles);
+            userRepository.save(user);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findByFirstname(String firstname) {
+        return userRepository.findByFirstname(firstname);
     }
 }
