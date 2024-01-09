@@ -3,12 +3,12 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
@@ -39,21 +39,16 @@ public class AdminController {
 
     @GetMapping("/admin/updateUser")
     public String editUserForm(@RequestParam("id") Long id, ModelMap modelMap) {
-        Optional<User> userById = userService.findById(id);
-
-        if (userById.isPresent()) {
-            modelMap.addAttribute("user", userById.get());
-            modelMap.addAttribute("listRoles", roleService.findAll());
-            return "/admin";
-        } else {
-            return "redirect:/admin";
-        }
+        User userUpdate = userService.findById(id).orElse(null);
+        List<Role> roles = roleService.findAll();
+        modelMap.addAttribute("user", userUpdate);
+        modelMap.addAttribute("listRoles", roles);
+        return "admin";
     }
 
     @PostMapping(value = "/admin/updateUser")
-    public String updateUser(@RequestParam("id") Long id,@RequestParam("role") String role, @ModelAttribute("user") User user) {
-        User userUpdate = userService.findById(id).orElse(null);
-        userService.updateUser(role,userUpdate);
+    public String updateUser(@RequestParam("role") String role, @ModelAttribute("user") User user) {
+        userService.updateUser(role ,user);
         return "redirect:/admin";
     }
 

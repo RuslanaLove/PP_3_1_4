@@ -23,7 +23,7 @@ public class UsersInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         roleRepository.saveAll(List.of(new Role("ROLE_USER"), new Role("ROLE_ADMIN")));
-        userService.addNewUser("ROLE_USER",new User("user", "userUser", 66, "hello" ));
-        userService.addNewUser("ROLE_ADMIN",new User("admin", "adminAdmin", 45, "hello123" ));
+        userService.addNewUser("ROLE_USER",new User("user", "userUser", 66, "user" ));
+        userService.addNewUser("ROLE_ADMIN",new User("admin", "adminAdmin", 45, "admin" ));
     }
 }
