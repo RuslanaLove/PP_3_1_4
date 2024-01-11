@@ -40,8 +40,8 @@ public class AdminController {
     }
 
     @PostMapping(value = "/admin/addUser")
-    public String addNewUser(@RequestParam("role") String role, @ModelAttribute("user") User user) {
-        userService.addNewUser(role,user);
+    public String addNewUser(@RequestParam("role") List<String> roles, @ModelAttribute("user") User user) {
+        userService.addNewUser(roles,user);
         return "redirect:/admin";
     }
 

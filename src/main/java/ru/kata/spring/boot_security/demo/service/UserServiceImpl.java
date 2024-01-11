@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,20 +44,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public void addNewUser(String role,User saveUser) {
+    public void addNewUser(List<String> roles,User saveUser) {
+        for (String role : roles) {
             Role role1 = roleRepository.findByRole(role);
             saveUser.getRoles().add(role1);
-            userRepository.save(saveUser);
+        }
+        userRepository.save(saveUser);
     }
 
     @Override
     @Transactional
     public void updateUser(String role,User updateUser) {
-        User user = userRepository.findById(updateUser.getId()).orElse(null);
         Role role1 = roleRepository.findByRole(role);
-        Set<Role> roles = user.getRoles();
-        roles.add(role1);
-        updateUser.setRoles(roles);
+        updateUser.getRoles().add(role1);
         userRepository.save(updateUser);
     }
 
